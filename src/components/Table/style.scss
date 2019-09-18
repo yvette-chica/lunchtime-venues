@@ -1,0 +1,37 @@
+.voting-table {
+    padding: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    background: white;
+
+    .ant-empty {
+        min-height: 12rem;
+    }
+
+    &__column {
+        flex: 1 1 20%;
+        flex-direction: row;
+        justify-content: center;
+        text-align: center;
+
+        &-title {
+            font-weight: bold;
+        }
+
+        &-category {
+            color: grey;
+        }
+    }
+
+    &__row,
+    &__row.ant-radio-group {
+        display: flex;
+        padding-top: .5rem;
+        padding-bottom: .5rem;
+    }
+
+    &__participant-label {
+        align-self: flex-end;
+    }
+}
+

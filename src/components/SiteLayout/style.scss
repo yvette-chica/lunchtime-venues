@@ -1,0 +1,12 @@
+.site-layout {
+    &__title {
+        color: white !important;
+        font-weight: bold;
+        font-size: 1.4rem;
+    }
+
+    &__content {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+}

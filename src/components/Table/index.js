@@ -1,45 +1,62 @@
 import React, { Component } from 'react';
-import { Row, Col, Radio } from 'antd';
+import { Radio, Input, Empty } from 'antd';
+import ColumnHeader from './ColumnHeader';
+
+import './style.scss';
 
 export default class Table extends Component {
     render() {
-        const { columns, users, onSelection } = this.props;
+        const { columns, users, onSelection, onChangeName } = this.props;
+
+        if (!columns.length) {
+            return (
+                <div className="voting-table">
+                    <Empty />
+                </div>
+            );
+        }
 
         return (
-            <div>
-                <Row>
+            <div className="voting-table">
+                <div className="voting-table__row">
+                    <div className="voting-table__column voting-table__participant-label">
+                        Participants
+                    </div>
                     {
                         columns.map(column => (
-                            <Col
-                                span={4}
+                            <ColumnHeader
+                                column={column}
                                 key={column.id}
-                            >
-                                {column.title}
-                                {` Votes: ${column.votes}`}
-                            </Col> 
+                            />
                         )) 
                     }
-                </Row>
+                </div>
+                { users.length ? null : <Empty />}
                 {
                     users.map(user => {
                         return (
-                            <Row key={user.id}>
-                                {user.participant}
-                                <Radio.Group
-                                    onChange={onSelection}
-                                    value={user.venueId}
-                                    name={user.id.toString()}
-                                >
-                                    { columns.map(column => (
-                                        <Radio
-                                            value={column.id}
-                                            key={column.id}
-                                        >
-                                            {column.title}
-                                        </Radio>
-                                    ))}
-                                </Radio.Group>
-                            </Row>
+                            <Radio.Group
+                                onChange={onSelection}
+                                value={user.venueId}
+                                name={user.id.toString()}
+                                className="voting-table__row"
+                                key={user.id}
+                            >
+                                <Input
+                                    value={user.participant}
+                                    onChange={onChangeName}
+                                    className="voting-table__column"
+                                    id={user.id.toString()}
+                                />
+                                    
+                                { columns.map(column => (
+                                    <Radio
+                                        className="voting-table__column"
+                                        value={column.id}
+                                        key={column.id}
+                                    />
+                                ))}
+                            </Radio.Group>
                         )
                     })
                 }

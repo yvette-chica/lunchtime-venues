@@ -12,6 +12,20 @@ export default class Dashboard extends Component {
         users: [],
     }
 
+    handleUpdateUserName = (event) => {
+        const { users } = this.state;
+        const userId = Number(event.nativeEvent.target.id);
+        const userIndex = users.findIndex(user => user.id === userId);
+        const newUserName = event.nativeEvent.target.value;
+
+        const updatedUsers = [...users];
+        updatedUsers[userIndex].participant = newUserName;
+
+        this.setState({
+            users: updatedUsers,
+        })
+    }
+
     handleVenueSearch = value => {
         if (value) {
             getVenues(value).then(
@@ -22,6 +36,7 @@ export default class Dashboard extends Component {
                                 title: item.venue.name,
                                 id: item.venue.id,
                                 votes: 0,
+                                category: item.venue.categories[0].name,
                             });
                         }
                     )
@@ -92,8 +107,8 @@ export default class Dashboard extends Component {
                     <Col span={6} />
                     <Col span={12}>
                         <Search
-                            placeholder="input search text"
-                            enterButton="Search"
+                            placeholder="Add location"
+                            enterButton="Get Venues"
                             size="large"
                             onSearch={this.handleVenueSearch}
                             allowClear
@@ -101,24 +116,31 @@ export default class Dashboard extends Component {
                     </Col>
                     <Col span={6} />
                 </Row>
-                <Row gutter={8}>
+                <Row>
                     <Col span={2} />
                     <Col span={20}>
                         <Table
                             columns={this.state.venues}
                             users={this.state.users}
                             onSelection={this.handleVote}
+                            onChangeName={this.handleUpdateUserName}
                         />
+                    </Col>
+                    <Col span={2} />
+                </Row>
+                <Row>
+                    <Col span={6} />
+                    <Col span={12}>
                         <Search
                             addonBefore="+"
-                            placeholder="User name"
-                            enterButton="Add New User"
+                            placeholder="Participant Name"
+                            enterButton="Add Participant"
                             size="large"
                             onSearch={this.handleAddNewUser}
                             allowClear
                         />
                     </Col>
-                    <Col span={2} />
+                    <Col span={6} />
                 </Row>
             </Fragment>
         );

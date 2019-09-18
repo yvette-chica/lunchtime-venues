@@ -1,19 +1,19 @@
 import React from 'react';
-import { Layout, Typography } from 'antd';
+import { Layout } from 'antd';
 
-const { Header, Footer, Content } = Layout;
-const { Title } = Typography;
+import './style.scss';
+
+const { Header, Content } = Layout;
 
 const SiteLayout = ({ children }) => {
     return (
-        <Layout>
-            <Header>
-                <Title>LunchTime</Title>
+        <Layout className="site-layout">
+            <Header className="site-layout__header">
+                <span className="site-layout__title">LunchTime Voting</span>
             </Header>
-            <Content>
+            <Content className="site-layout__content">
                 {children}
             </Content>
-        <Footer>Footer</Footer>
     </Layout> 
     )
 }
