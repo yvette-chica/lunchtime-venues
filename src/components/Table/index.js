@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'antd';
+import { Row, Col, Radio } from 'antd';
 
 export default class Table extends Component {
     render() {
-        const { columns } = this.props;
+        const { columns, users, onSelection } = this.props;
 
         return (
             <div>
@@ -15,10 +15,34 @@ export default class Table extends Component {
                                 key={column.id}
                             >
                                 {column.title}
+                                {` Votes: ${column.votes}`}
                             </Col> 
                         )) 
                     }
                 </Row>
+                {
+                    users.map(user => {
+                        return (
+                            <Row key={user.id}>
+                                {user.participant}
+                                <Radio.Group
+                                    onChange={onSelection}
+                                    value={user.venueId}
+                                    name={user.id.toString()}
+                                >
+                                    { columns.map(column => (
+                                        <Radio
+                                            value={column.id}
+                                            key={column.id}
+                                        >
+                                            {column.title}
+                                        </Radio>
+                                    ))}
+                                </Radio.Group>
+                            </Row>
+                        )
+                    })
+                }
             </div>
         )
     }

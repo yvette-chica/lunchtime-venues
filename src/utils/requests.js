@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { clientId, clientSecret } from './apiKeys';
 
-const baseUrl = 'https://api.foursquare.com/v2/venues/explore';
+const baseUrl = 'https://api.foursquare.com/v2/venues';
 
 export function getVenues(address) {
-    return axios.get(`${baseUrl}`, {
+    return axios.get(`${baseUrl}/explore`, {
         params: {
             near: address,
             client_id: clientId,
@@ -14,4 +14,8 @@ export function getVenues(address) {
             limit: 6,
         }
     });
+}
+
+export function getVenueLinks(venueId) {
+    return axios.get(`${baseUrl}/${venueId}/links`);
 }
