@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { clientId, clientSecret } from '../apiKeys';
+import { clientId, clientSecret } from './apiKeys';
 
 const baseUrl = 'https://api.foursquare.com/v2/venues/explore';
 
