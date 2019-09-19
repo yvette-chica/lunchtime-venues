@@ -13,6 +13,7 @@
         flex-direction: row;
         justify-content: center;
         text-align: center;
+        padding: .5rem;
 
         &-title {
             font-weight: bold;
@@ -20,6 +21,10 @@
 
         &-category {
             color: grey;
+        }
+
+        &--most-voted {
+            background: rgba(24, 143, 255, .3);
         }
     }
 

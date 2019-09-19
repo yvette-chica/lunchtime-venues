@@ -16,6 +16,12 @@ export function getVenues(address) {
     });
 }
 
-export function getVenueLinks(venueId) {
-    return axios.get(`${baseUrl}/${venueId}/links`);
+export function getVenueDetails(venueId) {
+    return axios.get(`${baseUrl}/${venueId}`, {
+        params: {
+            client_id: clientId,
+            client_secret: clientSecret,
+            v: 20190724,
+        }
+    });
 }

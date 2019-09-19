@@ -6,8 +6,7 @@ import './style.scss';
 
 export default class Table extends Component {
     render() {
-        const { columns, users, onSelection, onChangeName } = this.props;
-
+        const { columns, users, onSelection, onChangeName, mostVoted } = this.props;
         if (!columns.length) {
             return (
                 <div className="voting-table">
@@ -27,6 +26,7 @@ export default class Table extends Component {
                             <ColumnHeader
                                 column={column}
                                 key={column.id}
+                                isVoteWinner={mostVoted.id === column.id}
                             />
                         )) 
                     }

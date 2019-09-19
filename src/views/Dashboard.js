@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Input, Row, Col } from 'antd';
-import Table from '../components/Table';
-import { getVenues } from '../utils/requests';
+import VotingTable from '../components/Table';
+import { getVenues, getVenueDetails } from '../utils/requests';
 
 const { Search } = Input;
 
@@ -10,6 +10,7 @@ export default class Dashboard extends Component {
         venues: [],
         loading: false,
         users: [],
+        highestVotedVenue: {},
     }
 
     handleUpdateUserName = (event) => {
@@ -29,21 +30,33 @@ export default class Dashboard extends Component {
     handleVenueSearch = value => {
         if (value) {
             getVenues(value).then(
-                response => {
-                    const columns = response.data.response.groups[0].items.map(
-                        item => {
-                            return ({
-                                title: item.venue.name,
-                                id: item.venue.id,
-                                votes: 0,
-                                category: item.venue.categories[0].name,
-                            });
-                        }
-                    )
+                suggestionsResponse => {
+                    const { items } = suggestionsResponse.data.response.groups[0];
 
-                    this.setState({
-                        venues: columns,
-                    });
+                    Promise.all(items.map(item => {
+                        return getVenueDetails(item.venue.id);
+                    }))
+                        .then(
+                            detailResponses => {
+                                const detailsById = {}
+
+                                detailResponses.forEach(detail => {
+                                    const { venue } = detail.data.response;
+                                    detailsById[venue.id] = venue;
+                                })
+
+                                this.setState({
+                                    venues: items.map(item => ({
+                                        title: item.venue.name,
+                                        id: item.venue.id,
+                                        votes: 0,
+                                        category: item.venue.categories[0].name,
+                                        url: detailsById[item.venue.id].url,
+                                        rating: detailsById[item.venue.id].rating,
+                                    })),
+                                });
+                            }
+                        )
                 }
             )
         }
@@ -93,10 +106,20 @@ export default class Dashboard extends Component {
             updatedVenues[previousVenueIndex].votes--
         }
 
+        // Update venue with highest vote count
+        const highestVotedVenue = updatedVenues.reduce(
+            (mostVoted, current) => {
+                if (mostVoted.votes > current.votes) return mostVoted;
+                else if (mostVoted.votes < current.votes) return current;
+                return { votes: mostVoted.votes}
+            }
+        )
+
         // Update this.state.users & this.state.venues
         this.setState({
             users: updatedUsers,
             venues: updatedVenues, 
+            highestVotedVenue,
         })
     }
 
@@ -119,11 +142,12 @@ export default class Dashboard extends Component {
                 <Row>
                     <Col span={2} />
                     <Col span={20}>
-                        <Table
+                        <VotingTable
                             columns={this.state.venues}
                             users={this.state.users}
                             onSelection={this.handleVote}
                             onChangeName={this.handleUpdateUserName}
+                            mostVoted={this.state.highestVotedVenue}
                         />
                     </Col>
                     <Col span={2} />
